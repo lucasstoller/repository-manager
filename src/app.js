@@ -29,11 +29,16 @@ app.post("/repositories", (request, response) => {
 });
 
 app.put("/repositories/:id", checkIfRepositoryExists, (request, response) => {
-  const { repoIndex } = request
-  const { id } = request.params
+  const { repo, repoIndex } = request
   const { url, title, techs } = request.body
 
-  const updatedRepo = { id, url, title, techs }
+  const updatedRepo = {
+    id: repo.id,
+    url,
+    title,
+    techs,
+    likes: repo.likes
+  }
   repositories[repoIndex] = updatedRepo
 
   return response.json(updatedRepo).status(200)
@@ -55,6 +60,7 @@ function checkIfRepositoryExists(request, response, next) {
   
   if (repoIndex != -1) {
     request["repoIndex"] = repoIndex
+    request["repo"] = repositories[repoIndex]
     next()
   }
 
