@@ -28,9 +28,9 @@ app.post("/repositories", (request, response) => {
   return response.json(repo).status(201)
 });
 
-app.put("/repositories/:id", (request, response) => {
+app.put("/repositories/:id", checkIfRepositoryExists, (request, response) => {
+  const { repoIndex } = request
   const { id } = request.params
-  const repoIndex = repositories.findIndex(repo => repo.id === id)
   const { url, title, techs } = request.body
 
   const updatedRepo = { id, url, title, techs }
@@ -46,5 +46,19 @@ app.delete("/repositories/:id", (request, response) => {
 app.post("/repositories/:id/like", (request, response) => {
   // TODO
 });
+
+// Middlewares
+
+function checkIfRepositoryExists(request, response, next) {
+  const { id } = request.params
+  const repoIndex = repositories.findIndex(repo => repo.id === id)
+  
+  if (repoIndex != -1) {
+    request["repoIndex"] = repoIndex
+    next()
+  }
+
+  response.status(400).send(`There aren't a repo with ID ${id}. Please send a valid repo id.`)
+}
 
 module.exports = app;
