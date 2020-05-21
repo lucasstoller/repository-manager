@@ -50,8 +50,12 @@ app.delete("/repositories/:id", checkIfRepositoryExists, (request, response) => 
   return response.status(204).send()
 });
 
-app.post("/repositories/:id/like", (request, response) => {
-  // TODO
+app.post("/repositories/:id/like", checkIfRepositoryExists, (request, response) => {
+  const { repoIndex } = request
+  repositories[repoIndex].likes++
+  return response.json(
+    repositories[repoIndex]
+  ).status(201)
 });
 
 // Middlewares
