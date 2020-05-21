@@ -44,8 +44,10 @@ app.put("/repositories/:id", checkIfRepositoryExists, (request, response) => {
   return response.json(updatedRepo).status(200)
 });
 
-app.delete("/repositories/:id", (request, response) => {
-  // TODO
+app.delete("/repositories/:id", checkIfRepositoryExists, (request, response) => {
+  const { repoIndex } = request
+  repositories.splice(repoIndex)
+  return response.status(204).send()
 });
 
 app.post("/repositories/:id/like", (request, response) => {
