@@ -29,7 +29,14 @@ app.post("/repositories", (request, response) => {
 });
 
 app.put("/repositories/:id", (request, response) => {
-  // TODO
+  const { id } = request.params
+  const repoIndex = repositories.findIndex(repo => repo.id === id)
+  const { url, title, techs } = request.body
+
+  const updatedRepo = { id, url, title, techs }
+  repositories[repoIndex] = updatedRepo
+
+  return response.json(updatedRepo).status(200)
 });
 
 app.delete("/repositories/:id", (request, response) => {
